@@ -35,4 +35,16 @@ class TeamController extends Controller
     	return redirect()->route('teams.index');
     	
     }
+
+    public function delete(Team $team)
+    {
+        return view('teams.delete', compact('team'));
+    }
+
+    public function destroy(Team $team)
+    {
+        $team->delete();
+
+        return redirect()->route('teams.index');
+    }
 }
