@@ -9,6 +9,15 @@ use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        $this->middleware('in_team:' . $request->team)
+                ->except(['index', 'store']);
+
+        $this->middleware(['permission:delete team,' . $request->team])
+                ->only(['delete', 'destroy']);
+    }
+
     public function index(Request $request)
     {
     	$teams = $request->user()->teams;
