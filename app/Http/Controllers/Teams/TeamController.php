@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Teams;
 
 use App\Http\Controllers\Controller;
+use App\Models\Team;
+use App\Teams\Roles;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -13,9 +15,9 @@ class TeamController extends Controller
     	return view('teams.index', compact('teams'));
     }
 
-    public function show()
+    public function show(Team $team)
     {
-    	return view('teams.show');
+    	return view('teams.show', compact('team'));
     }
 
     public function store(Request $request)
@@ -26,7 +28,9 @@ class TeamController extends Controller
 
     	$user = $request->user();
 
-    	$user->teams()->create($request->only('name'));
+    	$team = $user->teams()->create($request->only('name'));
+
+        $user->attachRole(Roles::$roleWhenCreatingTeam, $team->id);
 
     	return redirect()->route('teams.index');
     	

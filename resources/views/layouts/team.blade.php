@@ -3,7 +3,7 @@
 @section('content')
 	<div class="container">
 		<h4 class="mb-4">
-			Team name
+			{{ $team->name }}
 		</h4>
 
 		@yield('teamcontent')
