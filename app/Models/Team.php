@@ -11,6 +11,11 @@ class Team extends LaratrustTeam
     	'name'
     ];
 
+    public function hasSubscription()
+    {
+        return false;
+    }
+
     public function ownedBy(User $user)
     {
     	return $this->users->find($user)->hasRole('team_admin', $this->id);

@@ -7,7 +7,7 @@
 	</li>
 	@permission('manage team subscription', $team->id)
 		<li class="list-group-item">
-			<a href="#">Subscription</a>
+			<a href="{{ route('teams.subscriptions.index', $team) }}">Subscription</a>
 		</li>
 	@endpermission
 </ul>
