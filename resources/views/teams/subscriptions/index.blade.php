@@ -44,6 +44,13 @@
 	                    </form>
 	                </div>
 	            </div>
+	        @else
+	        	<div class="card">
+	        		<div class="card-header">Team Subscription</div>
+	        		<div class="card-body">
+	        			You're on the {{ $team->plan->name }} plan ({{ $team->plan->team_limit }} users)
+	        		</div>
+	        	</div>    
             @endif
         </div>
     </div>

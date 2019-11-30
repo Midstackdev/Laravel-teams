@@ -17,6 +17,16 @@ class TeamSubscriptionController extends Controller
 
     public function store(Request $request, Team $team)
     {
-    	dd($request->only(['token', 'plan']));
+    	$this->validate($request, [
+    		'token' => 'required',
+    		'plan' => 'required|exists:plans,id'
+    	]);
+
+    	$plan = Plan::find($request->plan);
+    	
+    	$team->newSubscription('main', $plan->provider_id) 
+    			->create($request->token);
+
+    	return back();
     }
 }

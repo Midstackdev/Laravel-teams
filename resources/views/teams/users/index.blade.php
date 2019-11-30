@@ -11,6 +11,7 @@
                 	Dashboard
                 </div>
                 <div class="card-body">
+                    <p>You've used x out of x available user slots.</p>
                     <table class="table table-striped mb-0">
                     	<thead>
                     		<tr>
