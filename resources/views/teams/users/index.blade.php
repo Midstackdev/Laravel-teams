@@ -11,7 +11,7 @@
                 	Dashboard
                 </div>
                 <div class="card-body">
-                    <p>You've used x out of x available user slots.</p>
+                    @include('teams.subscriptions.partials._usage')
                     <table class="table table-striped mb-0">
                     	<thead>
                     		<tr>
@@ -36,7 +36,20 @@
                     				{{ $user->pivot->created_at }}
                     			</td>
                     			<td>
-                    				Menu
+                    				<div class="dropdown">
+                                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true">
+                                        Actions
+                                      </button>
+                                      <div class="dropdown-menu">
+                                        @permission('delete user')
+                                            @if(!$user->isOnlyAdminInTeam($team))
+                                            <button class="dropdown-item" type="button">
+                                                <a href="{{ route('teams.users.delete', [$team, $user]) }}">Delete</a>
+                                            </button>
+                                            @endif
+                                        @endpermission
+                                      </div>
+                                    </div>
                     			</td>
                     		</tr>
                     		@endforeach
@@ -46,25 +59,35 @@
             </div>
 			@permission('add users', $team->id)
 	            <div class="card">
-	                <div class="card-header">Add a user</div>
+    	                <div class="card-header">Add a user</div>
 
-	                <div class="card-body">
-	                    <form action="{{ route('teams.users.store', $team) }}" method="post">
-	                        @csrf
-	                        <div class="form-group">
-	                            <label for="email">Email</label>
-	                            <input type="text" name="email" id="email" class="form-control @error('email') is-invalid @enderror">
+    	                <div class="card-body">
+                            @if(!$team->hasSubscription())
+                                <p class="mb-0">
+                                    Please <a href="{{ route('teams.subscriptions.index', $team)}}">subscribe</a> to add users.
+                                </p>
+                            @elseif($team->hasReachedMemberLimit())    
+                                <p class="mb-0">
+                                    <a href="{{ route('teams.subscriptions.index', $team)}}">Upgrade</a> to add more users.
+                                </p>
+                            @else
+    	                    <form action="{{ route('teams.users.store', $team) }}" method="post">
+    	                        @csrf
+    	                        <div class="form-group">
+    	                            <label for="email">Email</label>
+    	                            <input type="text" name="email" id="email" class="form-control @error('email') is-invalid @enderror">
 
-	                            @error('email')
-	                                <span class="invalid-feedback">
-	                                    <strong>{{ $message }}</strong>
-	                                </span>
-	                            @enderror
-	                        </div>
+    	                            @error('email')
+    	                                <span class="invalid-feedback">
+    	                                    <strong>{{ $message }}</strong>
+    	                                </span>
+    	                            @enderror
+    	                        </div>
 
-	                        <button type="submit" class="btn btn-secondary">Add user</button>
-	                    </form>
-	                </div>
+    	                        <button type="submit" class="btn btn-secondary">Add user</button>
+    	                    </form>
+                            @endif    
+    	                </div>
 	            </div>
 	        @endpermission    
         </div>

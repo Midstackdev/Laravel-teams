@@ -29,6 +29,10 @@ class TeamUserController extends Controller
     		'email' => 'required|exists:users,email'
     	]);
 
+        if ($team->hasReachedMemberLimit()) {
+            return back();
+        }
+
     	$team->users()->syncWithoutDetaching(
     		$user = User::where('email', $request->email)->first()
     	);
@@ -36,5 +40,49 @@ class TeamUserController extends Controller
     	$user->attachRole(Roles::$roleWhenJoiningTeam, $team->id);
 
     	return back();
+    }
+
+    public function delete(Team $team, User $user)
+    {
+        if (!$team->users->contains($user)) {
+            return back();
+        }
+
+        if ($user->isOnlyAdminInTeam($team)) {
+            return back();
+        }
+
+        if ($team->users->count() === 1) {
+            return back();
+        }
+
+        return view('teams.users.delete', compact(['team', 'user']));
+    }
+
+    /**
+     * [destroy description]
+     * @param  Team   $team [description]
+     * @param  User   $user [description]
+     * @return [type]       [description]
+     */
+    public function destroy(Team $team, User $user)
+    {
+        if (!$team->users->contains($user)) {
+            return back();
+        }
+
+        if ($user->isOnlyAdminInTeam($team)) {
+            return back();
+        }
+
+        if ($team->users->count() === 1) {
+            return back();
+        }
+
+        $team->users()->detach($user);
+
+        $user->detachRoles([], $team->id);
+
+        return redirect()->route('teams.users.index', $team);
     }
 }

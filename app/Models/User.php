@@ -38,6 +38,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isOnlyAdminInTeam(Team $team)
+    {
+        return $this->hasRole('team_admin', $team->id) && 
+                $team->users()->whereRoleIs('team_admin', $team->id)->count() === 1;
+    }
+
     public function teams()
     {
         return $this->belongsToMany(Team::class)
