@@ -45,10 +45,44 @@
 	                </div>
 	            </div>
 	        @else
-	        	<div class="card">
+	        	<div class="card mb-4">
 	        		<div class="card-header">Team Subscription</div>
 	        		<div class="card-body">
 	        			You're on the {{ $team->plan->name }} plan ({{ $team->plan->team_limit }} users)
+	        		</div>
+	        	</div>  
+
+	        	<div class="card">
+	        		<div class="card-header">Swap Subscription</div>
+	        		<div class="card-body">
+	        			@include('teams.subscriptions.partials._usage')
+
+	        			<form action="{{ route('teams.subscriptions.swap.store', $team) }}" method="post">
+	                    	@csrf 
+
+	                    	<div class="form-group">
+	                    		<label>Choose a plan</label>
+
+	                    		@foreach($plans as $index => $plan)
+									<div class="form-check">
+										<input 
+										type="radio" 
+										name="plan" 
+										id="plan_{{ $plan->id }}" 
+										class="form-check-input"
+										value = "{{ $plan->id }}"
+										{{ !$team->canDowngrade($plan) ? 'disabled' : '' }}
+										{{ $team->isOnPlan($plan->provider_id) ? 'checked' : '' }}
+										>
+										<label class="form-check-label" for="plan_{{ $plan->id }}">
+											{{ $plan->name }} ({{ $plan->team_limit}} users)
+										</label>
+									</div>
+	                    		@endforeach
+	                    	</div>
+
+	                    	<button type="submit" class="btn btn-outline-dark">Swap</button>
+	                    </form>
 	        		</div>
 	        	</div>    
             @endif

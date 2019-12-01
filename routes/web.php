@@ -27,5 +27,9 @@ Route::resource('teams/{team}/subscriptions', 'Teams\TeamSubscriptionController'
 	'destroy' => 'teams.subscriptions.destroy',
 ]);
 
+Route::resource('teams/{team}/subscriptions/swap', 'Teams\TeamSubscriptionSwapController')->names([
+	'store' => 'teams.subscriptions.swap.store',
+]);
+
 Route::get('teams/{team}/users/{user}/edit', 'Teams\TeamUserRoleController@edit')->name('teams.user.roles.edit');
 Route::patch('teams/{team}/users/{user}/edit', 'Teams\TeamUserRoleController@update')->name('teams.user.roles.update');

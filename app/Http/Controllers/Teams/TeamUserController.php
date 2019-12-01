@@ -16,8 +16,8 @@ class TeamUserController extends Controller
 
 	    $this->middleware(['permission:add users,' . $request->team])
 	            ->only(['store']);
-                
-        $this->middleware(['permission:delete users,' . $request->team])
+
+        $this->middleware(['permission:delete user,' . $request->team])
                 ->only(['delete', 'destroy']);
 	}
 

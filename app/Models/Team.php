@@ -26,6 +26,11 @@ class Team extends LaratrustTeam
     	return $this->ownedBy(auth()->user());
     }
 
+    public function canDowngrade(Plan $plan)
+    {
+        return $this->users->count() <= $plan->team_limit;
+    }
+
     public function hasReachedMemberLimit()
     {
         if (!$this->hasSubscription()) {
