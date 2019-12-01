@@ -36,20 +36,27 @@
                     				{{ $user->pivot->created_at }}
                     			</td>
                     			<td>
-                    				<div class="dropdown">
-                                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true">
-                                        Actions
-                                      </button>
-                                      <div class="dropdown-menu">
-                                        @permission('delete user')
-                                            @if(!$user->isOnlyAdminInTeam($team))
-                                            <button class="dropdown-item" type="button">
-                                                <a href="{{ route('teams.users.delete', [$team, $user]) }}">Delete</a>
-                                            </button>
-                                            @endif
-                                        @endpermission
-                                      </div>
-                                    </div>
+                                    @permission(['delete user', 'change user role'], $team->id)
+                        				<div class="dropdown">
+                                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true">
+                                            Actions
+                                          </button>
+                                          <div class="dropdown-menu">
+                                            @permission('delete user', $team->id)
+                                                @if(!$user->isOnlyAdminInTeam($team))
+                                                <button class="dropdown-item" type="button">
+                                                    <a href="{{ route('teams.users.delete', [$team, $user]) }}">Delete</a>
+                                                </button>
+                                                @endif
+                                            @endpermission
+                                            @permission('change user role', $team->id)
+                                                <button class="dropdown-item" type="button">
+                                                    <a href="{{ route('teams.user.roles.edit', [$team, $user]) }}">Change role</a>
+                                                </button>
+                                            @endpermission
+                                          </div>
+                                        </div>
+                                    @endpermission
                     			</td>
                     		</tr>
                     		@endforeach
